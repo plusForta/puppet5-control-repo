@@ -1,4 +1,4 @@
-class {'role::frontend':
+class {'::role::frontend':
 
   include '::profile::kirby::master'
 
