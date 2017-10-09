@@ -10,9 +10,11 @@ hierarchy:
   - name: "Per-node data"                   # Human-readable name.
     path: "nodes/%{trusted.certname}.yaml"  # File path, relative to datadir.
                                    # ^^^ IMPORTANT: include the file extension!
-
   - name: "Per-OS defaults"
     path: "os/%{facts.os.family}.yaml"
+
+  - name: "Per environment"
+    path: "env/%{facts.stage}.yaml"
 
   - name: "Common data"
     path: "common.yaml"
