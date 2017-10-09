@@ -1,5 +1,5 @@
 class {'::role::frontend':
 
-  include '::profile::kirby::master'
+  include '::profile::kirby'
 
 }
