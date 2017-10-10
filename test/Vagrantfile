@@ -37,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "server", type: "puppet_server" do |p|
     p.puppet_server = "puppet-test.pfdev.de"
-    p.options = "--test --waitforcert=10"
+    p.options = "--test --waitforcert=10 --environment='local'"
   end
 
   # VMs
