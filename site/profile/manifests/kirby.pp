@@ -9,8 +9,8 @@
 
 class profile::kirby (
   # read from hiera
-  $hostname,
-  $kirbykey,
+    $hostname,
+    $kirbykey,
   ) {
 
   class {'::apache':

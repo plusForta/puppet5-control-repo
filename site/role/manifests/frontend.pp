@@ -1,5 +1,9 @@
-class {'::role::frontend':
+#
+# This role defines all the profiles required for a frontend CMS server.
+#
 
-  include profile::kirby
+class role::frontend: {
+
+  include ::profile::kirby
 
 }
