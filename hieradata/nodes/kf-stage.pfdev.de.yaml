@@ -1,4 +1,6 @@
 ---
 classes:
   - role::frontend
-  
+
+profile::kirby::hostname: kf-stage.pfdev.de
+profile::kriby::kirbykey: none
