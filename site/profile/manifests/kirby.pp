@@ -7,7 +7,7 @@
 # * registers for an SSL cert
 
 
-class profile::kirby::master (
+class profile::kirby (
   # read from hiera
   $hostname,
   $kirbykey,
