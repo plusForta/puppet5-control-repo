@@ -1,0 +1,104 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+## This is a Vagrantfile to test puppet.
+
+# list all our VMs, and their corresponding IP, OS and domain
+# (hashicorp-style):
+#   - default 'os' is 'bento/ubuntu-16.04'
+#   - default 'domain' is 'untangle.com'
+# FIXME: can perhaps be wrapped into a class at some point
+vms = { 'master'          => { 'ip' => '192.168.33.10' },
+        'stage-kf'        => { 'ip' => '192.168.33.20' },
+#        'kautionsfrei'    => { 'ip' => '192.168.33.21',
+#                               'domain' => 'kautionsfrei.de',
+#                               'os'  => "debian/jessie", },
+    }
+
+# Vagrantfile API/syntax version. Don't touch unless you know what
+# you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # providers
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+    v.cpus   = 2
+  end
+
+  config.vm.provider :lxc do |v, override|
+    override.vm.box = "fgrehm/trusty64-lxc"
+  end
+
+  # provisioners
+  config.vm.provision "puppetlabs source",
+                      type: "shell",
+                      path: "puppet_bootstrap.sh"
+
+  config.vm.provision "server", type: "puppet_server" do |p|
+    p.puppet_server = "puppet-test.pfdev.de"
+    p.options = "--test --waitforcert=10"
+  end
+
+  # VMs
+  config.vm.define :master do |master|
+    vm = vms['master']
+    # FIXME: those constants need to be defined somewhere else,
+    # ideally in the future class that'll wrap a host definition
+    master.vm.synced_folder "..", "/usr/src/puppet"
+#    master.vm.synced_folder "../hieradata", "/etc/puppet/hieradata"
+#    master.vm.synced_folder "../modules", "/etc/puppet/modules"
+#    master.vm.synced_folder "../", "/etc/puppet/original"
+    master.vm.hostname = "puppet-test.pfdev.de"
+    master.vm.box = vm.fetch('name', 'bento/ubuntu-16.04')
+    master.vm.network :private_network, ip: vm['ip']
+    config.vm.provider "virtualbox" do |v|
+     v.memory = 3072
+     v.cpus   = 2
+    end
+    # here we override the "server" provisioner (defined above), so
+    # this one VM doesn't get puppetized
+    master.vm.provision "server", type: "puppet_server" do |p|
+      p.options = "--disable"
+    end
+    # # let's also override the "puppetlabs source" provisioner, as
+    # # running puppet_master.sh just afterwards will take care of it
+    # # and we don't want to apt-get update twice.
+    # # If we later decide to remove the sources setup from
+    # # puppet_master.sh, this won't need to be overriden anymore
+    # master.vm.provision "puppetlabs source",
+    #                     type: "shell",
+    #                     path: "/bin/true",
+    #                     binary: true
+    master.vm.provision "shell",
+                        type: "shell",
+                        path: "puppet_master.sh"
+  end
+
+  vms.each_pair do |name, vm|
+    ip = vm['ip']
+    # FIXME: those constants need to be defined somewhere else,
+    # ideally in the future class that'll wrap a host definition
+    os = vm.fetch('os', 'bento/ubuntu-16.04')
+    domain = vm.fetch('domain', 'pfdev.de')
+    config.vm.define name.to_s do |node|
+      node.vm.hostname = "#{name.gsub(/\..+/,"")}.#{domain}"
+      node.vm.network :private_network, ip: ip
+      node.vm.box = os
+      # FIXME: handle that cleanly directly in the 'vms' hash, or in
+      # some other datastructure
+      if name == "graylog" then
+        config.vm.provider "virtualbox" do |v|
+         v.memory = 2048
+         v.cpus   = 2
+        end
+      elsif ["prod","tdprod"].include?(name) then
+        config.vm.provider "virtualbox" do |v|
+          v.memory = 6144
+          v.cpus   = 2
+        end
+      end
+    end
+  end
+
+end

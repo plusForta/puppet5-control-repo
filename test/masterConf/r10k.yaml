@@ -1,0 +1,9 @@
+:cachedir: '/var/cache/r10k'
+
+# A list of git repositories to create
+:sources:
+  # This will clone the git repository and instantiate an environment per
+  # branch in /etc/puppetlabs/code/environments
+  :my-org:
+    remote: '/usr/src/puppet/'
+    basedir: '/etc/puppetlabs/code/environments'
