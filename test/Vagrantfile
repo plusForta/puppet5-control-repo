@@ -9,7 +9,7 @@
 #   - default 'domain' is 'untangle.com'
 # FIXME: can perhaps be wrapped into a class at some point
 vms = { 'master'          => { 'ip' => '192.168.33.10' },
-        'stage-kf'        => { 'ip' => '192.168.33.20' },
+        'kf-stage'        => { 'ip' => '192.168.33.20' },
 #        'kautionsfrei'    => { 'ip' => '192.168.33.21',
 #                               'domain' => 'kautionsfrei.de',
 #                               'os'  => "debian/jessie", },

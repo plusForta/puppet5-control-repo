@@ -28,6 +28,6 @@ dpkg -i ${repo_deb_path} >/dev/null
 apt-get update >/dev/null
 
 echo "Installing Puppet..."
-apt-get install -y puppet > /dev/null
-puppet agent --enable
+apt-get install -y puppet-agent > /dev/null
+/opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true >/dev/null
 echo "Puppet installed!"
