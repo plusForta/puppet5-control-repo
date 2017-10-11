@@ -7,11 +7,10 @@
 # * registers for an SSL cert
 
 
-class profile::kirby {
-
-  $hostname = lookup('profile::kirby::hostname')
-  $kirbykey = lookup('profile::kirby::kirbykey')
-
+class profile::kirby (
+  $hostname,
+  $kirbykey,
+  ){
 
   class {'::apache':
 

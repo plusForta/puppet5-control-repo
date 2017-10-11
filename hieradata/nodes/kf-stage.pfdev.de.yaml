@@ -3,4 +3,4 @@ classes:
   - role::frontend
 
 profile::kirby::hostname: "kf-stage.pfdev.de"
-profile::kriby::kirbykey: "no key yet"
+profile::kirby::kirbykey: "no key yet"
