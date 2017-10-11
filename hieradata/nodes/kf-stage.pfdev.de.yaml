@@ -2,5 +2,5 @@
 classes:
   - role::frontend
 
-profile::kirby::hostname: kf-stage.pfdev.de
-profile::kriby::kirbykey: none
+profile::kirby::hostname: "kf-stage.pfdev.de"
+profile::kriby::kirbykey: "no key yet"

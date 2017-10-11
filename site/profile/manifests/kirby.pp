@@ -7,11 +7,11 @@
 # * registers for an SSL cert
 
 
-class profile::kirby (
-  # read from hiera
-    $hostname,
-    $kirbykey,
-  ) {
+class profile::kirby {
+
+  $hostname = lookup('profile::kirby::hostname')
+  $kirbykey = lookup('profile::kirby::kirbykey')
+
 
   class {'::apache':
 
